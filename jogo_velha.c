@@ -4,9 +4,10 @@
 #include <locale.h>
 #include <windows.h>
 
-
-void mostrarJogo(char jogo[3][3]){
-    printf("\n\n");
+// funcao mostrar tabuleiro do jogo
+void mostrarJogo(char jogo[3][3], int pontos){
+    system("cls");
+    printf("sua pontuação: %d\n\n", pontos);
         for(int i = 0; i < 3; i++){
             if(i == 0)
                 printf(" 1   2   3\n\n");
@@ -22,7 +23,7 @@ void mostrarJogo(char jogo[3][3]){
         }
     }
 
-
+//funcao verificar se alguem ganhou por linha, coluna ou diagonal
 int verificar(char jogo[3][3]){
     int j;
     for(int i = 0; i < 3; i++){// verifica se ganhou pela linha
@@ -56,7 +57,7 @@ int verificar(char jogo[3][3]){
     return 0;
 }
 
-
+//funcao verifica se ainda existem espaços em branco para jogar
 int partida(char jogo[3][3]){
     for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
@@ -65,10 +66,11 @@ int partida(char jogo[3][3]){
                 }
             }
         }
-
+    printf("            EMPATOU!\n\n");
     return 0;
 }
 
+//funcao realiza cada jogada
 void jogada(int p, int l, int c, char jogo[3][3]){
     do{ 
         if(p== 0){
@@ -80,6 +82,7 @@ void jogada(int p, int l, int c, char jogo[3][3]){
             srand(time(NULL));
             l = (rand() % 3) + 1;
             c =  (rand() % 3) + 1;
+            //se o numero aleatorio caiu em uma casa com valor, procura a primeira casa vazia e joga nela
             if(jogo[l-1][c-1] != ' '){
                 for(int i = 0; i < 3; i++){
                     for(int j = 0; j < 3; j++){
@@ -93,16 +96,17 @@ void jogada(int p, int l, int c, char jogo[3][3]){
                 }
             }
         }
-        
+
     }while(l <= 0 || l > 3 || c <= 0 || c > 3 || jogo[l-1][c-1] != ' ');
 
-    if(p == 0){
+    if(p == 0){ // player 1
         jogo[l-1][c-1] = 'O';    
-    }else{
+    }else{ // player 2
         jogo[l-1][c-1] = 'X';
     }
     system("cls");
 }
+
 
 struct Jogador{
     char nome[10];
@@ -110,10 +114,12 @@ struct Jogador{
 };
 
 
+//ordenação bubble sort dos array com o ranking
 void bubble_sort(int* pontuacao, char jogadores[5][10], int tamanho){
 
     for(int i = 0; i < tamanho; i++){
         for(int j = 0; j < tamanho - 1; j++){
+            //verifica se o adjacente é maior e faz a contra entre eles
             if(pontuacao[j] < pontuacao[j+1]){
                 int auxp = pontuacao[j];
                 pontuacao[j] = pontuacao[j+1];
@@ -125,7 +131,7 @@ void bubble_sort(int* pontuacao, char jogadores[5][10], int tamanho){
 
             }
         }
-    }
+    } 
 
 
 }
@@ -137,8 +143,8 @@ int main(){
     char matrix[3][3];
     FILE *rank;
     struct Jogador j;
-    int pontuacoes[6];
-    char jogadores[6][10];
+    int pontuacoes[10];
+    char jogadores[10][10];
     int pontuacao;
     char jogador[10];
     char continuar;
@@ -150,28 +156,31 @@ int main(){
         tamanho = 0;
         continuar = 's';
         vida = 2;
+        j.pontos = 0;
 
+        // menu
         printf("|1 - JOGAR    |\n|2 - RANKING  |\n|3 - CREDITOS |\n|4 - SAIR     |\n");
         scanf("%d", &opcao);
         switch (opcao)
         {
         case 1:
+                system("cls");
                 printf("Digite seu nome: ");
                 fflush(stdin);
                 fgets(j.nome,10,stdin);
                 j.nome[strlen(j.nome) - 1] = '\0';
+
             while(vida > 0){
-                system("cls");
+                //preencher a matrix do jogo com espaços em branco
                 for(int i = 0; i < 3; i++){
                     for(int j = 0; j < 3; j++){
                         matrix[i][j] = ' ';
                     }
                 }
 
-                mostrarJogo(matrix);
+                mostrarJogo(matrix, j.pontos);
 
                 for(int i = 0; i < 9; i++){
-
                     if(i%2 == 0){
                         printf("\n\nVez de %s:\n", j.nome);
                         jogada(0,l,c,matrix);
@@ -180,7 +189,8 @@ int main(){
                         Sleep(2000);
                         jogada(1,l,c,matrix);
                     }
-                    mostrarJogo(matrix);
+                    
+                    mostrarJogo(matrix, j.pontos);
 
                     if(verificar(matrix) == 1){
                         if(i%2==0){
@@ -193,32 +203,24 @@ int main(){
                                 printf("Você possui %d vida\n", vida);
                             }else{
                                 printf("Game over!\n");
-                                printf("Sua pontução: %d\n", j.pontos);
+                                printf("Sua pontução final: %d\n", j.pontos);
                                 rank = fopen("ranking.txt","a");
                                 fprintf(rank, "%s %d\n", j.nome, j.pontos);
                                 fclose(rank);
                             }
                         }
-                        system("pause");
                         break;
                     }
-
-
-
-                    if(partida(matrix) == 0){
-                        printf("            EMPATOU!\n\n");
-
-                        system("pause");
-                        break;
-                    }
+                    partida(matrix);
                 }
-
+                system("pause");
             }
             break;
         case 2:
             system("cls");
             rank = fopen("ranking.txt", "r");
             printf("    OS 5 MELHORES\nNOME     |    PONTUAÇÃO\n");
+            //adiciona a um array o nome e em outro os pontos de cada linha do txt
             while(fscanf(rank,"%s %d",  jogador, &pontuacao) != EOF){
                 strcpy(jogadores[tamanho], jogador);
                 pontuacoes[tamanho] = pontuacao;
@@ -227,20 +229,24 @@ int main(){
 
             bubble_sort(pontuacoes, jogadores, tamanho);
 
+            //mostra na tela os 5 primeiros com mais pontos
             for(int i = 0; i < 5; i++){
                 printf("%s.......... %d\n", jogadores[i], pontuacoes[i]);
             }
+
             fclose(rank);
             
             
             system("pause");
             break;
         case 3:
+            // creditos do desenvolvedor do prejeto
             system("cls");
             printf("Desenvolvido por Daniel Oliveira\nAluno da Unipê - Ciência da Computação\n2021\n\n");
             system("pause");
             break;
         case 4:
+            // sair do jogo
             printf("FIM DE JOGO");
             break;
         default:
