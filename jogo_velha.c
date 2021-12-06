@@ -3,11 +3,17 @@
 #include <string.h>
 #include <locale.h>
 #include <windows.h>
+#include <math.h>
+
+struct Jogador{
+    char nome[10];
+    int pontos;
+};
 
 // funcao mostrar tabuleiro do jogo
-void mostrarJogo(char jogo[3][3], int pontos){
+void mostrarJogo(char jogo[3][3], int pontos, int nivel, int vidas){
     system("cls");
-    printf("sua pontuação: %d\n\n", pontos);
+    printf("Nivel %d  -  pontuação: %d  -  Vidas: %d\n\n", nivel,pontos, vidas);
         for(int i = 0; i < 3; i++){
             if(i == 0)
                 printf(" 1   2   3\n\n");
@@ -74,11 +80,15 @@ int partida(char jogo[3][3]){
 void jogada(int p, int l, int c, char jogo[3][3]){
     do{ 
         if(p== 0){
-            printf("linha: ");
+            fflush(stdin);
+            printf("Linha: ");
             scanf("%d", &l);
-            printf("coluna: ");
+            fflush(stdin);
+            printf("Coluna:");
             scanf("%d", &c);
         }else{
+            printf("\n\nJOGADOR 2 (COM)...''pensando''\n");
+            Sleep(2000);
             srand(time(NULL));
             l = (rand() % 3) + 1;
             c =  (rand() % 3) + 1;
@@ -108,14 +118,9 @@ void jogada(int p, int l, int c, char jogo[3][3]){
 }
 
 
-struct Jogador{
-    char nome[10];
-    int pontos;
-};
-
 
 //ordenação bubble sort dos array com o ranking
-void bubble_sort(int* pontuacao, char jogadores[5][10], int tamanho){
+void bubble_sort(int *pontuacao, char jogadores[5][10], int tamanho){
 
     for(int i = 0; i < tamanho; i++){
         for(int j = 0; j < tamanho - 1; j++){
@@ -139,7 +144,7 @@ void bubble_sort(int* pontuacao, char jogadores[5][10], int tamanho){
 
 
 int main(){
-    int l = -1, c = -1, opcao = -1, tamanho, vida;
+    int l = -1, c = -1, opcao = -1, tamanho, vida, nivel, vez;
     char matrix[3][3];
     FILE *rank;
     struct Jogador j;
@@ -157,6 +162,7 @@ int main(){
         continuar = 's';
         vida = 2;
         j.pontos = 0;
+        nivel = 0;
 
         // menu
         printf("|1 - JOGAR    |\n|2 - RANKING  |\n|3 - CREDITOS |\n|4 - SAIR     |\n");
@@ -178,24 +184,35 @@ int main(){
                     }
                 }
 
-                mostrarJogo(matrix, j.pontos);
+                nivel++;
+                mostrarJogo(matrix, j.pontos, nivel, vida);
 
-                for(int i = 0; i < 9; i++){
+                for(int i = 8; i >= 0; i--){
                     if(i%2 == 0){
-                        printf("\n\nVez de %s:\n", j.nome);
-                        jogada(0,l,c,matrix);
+                        if(nivel%2 == 0){
+                            vez = 1;
+                        }else{
+                            vez = 0;
+                            printf("\n\nJogador 1 - %s\n", j.nome);
+                        }
+                        jogada(vez,l,c,matrix);
+                            
                     }else{
-                        printf("\n\nJOGADOR 2 (COM)...''pensando''\n");
-                        Sleep(2000);
-                        jogada(1,l,c,matrix);
+                        if(nivel%2 == 0){
+                            vez = 0;
+                            printf("\n\nJogador 1 - %s\n", j.nome);
+                        }else{
+                            vez = 1;
+                        }
+                        jogada(vez,l,c,matrix);
                     }
                     
-                    mostrarJogo(matrix, j.pontos);
+                    mostrarJogo(matrix, j.pontos, nivel, vida);
 
                     if(verificar(matrix) == 1){
-                        if(i%2==0){
+                        if(vez==0){
                             printf("            -- %s VENCEU --\n\n", j.nome);
-                            j.pontos++;
+                            j.pontos += i+1;
                         }else{
                             printf("            -- COMPUTADOR VENCEU --\n\n");
                             vida--;
