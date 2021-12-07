@@ -287,12 +287,16 @@ int main()
                 pontuacoes[tamanho] = pontuacao;
                 tamanho++;
             }
-
+            fclose(rank);
             bubble_sort(pontuacoes, jogadores, tamanho);
-
-            // mostra na tela os 5 primeiros com mais pontos
+            rank = fopen("ranking.txt", "w");
+            fprintf(rank, "");
+            fclose(rank);
+            rank = fopen("ranking.txt", "a");
+            //mostra na tela os 5 primeiros com mais pontos
             for (int i = 0; i < 5; i++)
             {
+                fprintf(rank, "%s %d\n", jogadores[i], pontuacoes[i]);
                 printf("%s.......... %d\n", jogadores[i], pontuacoes[i]);
             }
 

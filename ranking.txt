@@ -1,7 +1,5 @@
+daniel 5
 dan 4
 null 0
 null 0
 null 0
-null 0
-Daniel 7
-
