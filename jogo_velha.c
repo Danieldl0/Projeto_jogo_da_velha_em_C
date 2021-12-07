@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <locale.h>
-#include <windows.h>
-#include <math.h>
+#include <Windows.h>
+
 
 struct Jogador
 {
