@@ -176,8 +176,8 @@ int main()
     char jogo[3][3];
     FILE *rank;
     struct Jogador j;
-    int pontuacoes[10];
-    char jogadores[10][10];
+    int pontuacoes[6];
+    char jogadores[6][10];
     int pontuacao;
     char jogador[10];
     char continuar;
@@ -294,7 +294,7 @@ int main()
             fclose(rank);
             rank = fopen("ranking.txt", "a");
             //mostra na tela os 5 primeiros com mais pontos
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < tamanho; i++)
             {
                 fprintf(rank, "%s %d\n", jogadores[i], pontuacoes[i]);
                 printf("%s.......... %d\n", jogadores[i], pontuacoes[i]);
