@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <Windows.h>
-
+#include <locale.h>
 
 struct Jogador
 {
@@ -23,12 +23,12 @@ void mostrarJogo(char jogo[3][3], int pontos, int nivel, int vidas)
         {
             printf(" %c ", jogo[i][j]);
             if (j != 2)
-                printf("│");
+                printf("|");
         }
         printf("  %d", i + 1);
         if (i != 2)
         {
-            printf("\n───┼───┼───\n");
+            printf("\n---+---+---\n");
         }
     }
 }
@@ -109,7 +109,7 @@ void jogada(int p, int l, int c, char jogo[3][3])
         }
         else
         {
-            printf("\n\nJOGADOR 2 (COM)...''pensando''\n");
+            printf("\n\nJogador 2 - (COM) ''pensando'' \n");
             Sleep(2000);
             srand(time(NULL));
             l = (rand() % 3) + 1;
@@ -171,6 +171,7 @@ void bubble_sort(int *pontuacao, char jogadores[5][10], int tamanho)
 
 int main()
 {
+    setlocale(LC_ALL, "Portuguese");
     int l = -1, c = -1, opcao = -1, tamanho, vida, nivel, vez;
     char jogo[3][3];
     FILE *rank;
@@ -253,7 +254,7 @@ int main()
                         }
                         else
                         {
-                            printf("            -- COMPUTADOR VENCEU --\n\n");
+                            printf("            -- Computador VENCEU --\n\n");
                             vida--;
                             if (vida > 0)
                             {
