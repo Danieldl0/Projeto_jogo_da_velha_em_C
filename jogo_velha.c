@@ -3,7 +3,6 @@
 #include <string.h>
 #include <Windows.h>
 
-
 struct Jogador
 {
     char nome[10];
@@ -14,7 +13,7 @@ struct Jogador
 void mostrarJogo(char jogo[3][3], int pontos, int nivel, int vidas)
 {
     system("cls");
-    printf("Nivel %d  -  pontuacao: %d  -  Vidas: %d\n\n", nivel, pontos, vidas);
+    printf("Nivel %d  -  pontuação: %d  -  Vidas: %d\n\n", nivel, pontos, vidas);
     for (int i = 0; i < 3; i++)
     {
         if (i == 0)
@@ -23,12 +22,12 @@ void mostrarJogo(char jogo[3][3], int pontos, int nivel, int vidas)
         {
             printf(" %c ", jogo[i][j]);
             if (j != 2)
-                printf("|");
+                printf("│");
         }
         printf("  %d", i + 1);
         if (i != 2)
         {
-            printf("\n---+---+---\n");
+            printf("\n───┼───┼───\n");
         }
     }
 }
@@ -109,7 +108,7 @@ void jogada(int p, int l, int c, char jogo[3][3])
         }
         else
         {
-            printf("\n\nJogador 2 - (COM)... \n");
+            printf("\n\nJogador 2 - (COM) ''pensando'' \n");
             Sleep(2000);
             srand(time(NULL));
             l = (rand() % 3) + 1;
@@ -257,12 +256,12 @@ int main()
                             vida--;
                             if (vida > 0)
                             {
-                                printf("Voce possui %d vida\n", vida);
+                                printf("Você possui %d vida\n", vida);
                             }
                             else
                             {
                                 printf("Game over!\n");
-                                printf("Sua pontuacao final: %d\n", j.pontos);
+                                printf("Sua pontução final: %d\n", j.pontos);
                                 rank = fopen("ranking.txt", "a");
                                 fprintf(rank, "%s %d\n", j.nome, j.pontos);
                                 fclose(rank);
@@ -278,7 +277,7 @@ int main()
         case 2:
             system("cls");
             rank = fopen("ranking.txt", "r");
-            printf("    OS 5 MELHORES\nNOME     |    PONTUACAO\n");
+            printf("    OS 5 MELHORES\nNOME     |    PONTUAÇÃO\n");
             // adiciona a um array o nome e em outro os pontos de cada linha do txt
             while (fscanf(rank, "%s %d", jogador, &pontuacao) != EOF)
             {
@@ -293,6 +292,9 @@ int main()
             fclose(rank);
             rank = fopen("ranking.txt", "a");
             //mostra na tela os 5 primeiros com mais pontos
+            if (tamanho > 5){
+                tamanho = 5;
+            }
             for (int i = 0; i < tamanho; i++)
             {
                 fprintf(rank, "%s %d\n", jogadores[i], pontuacoes[i]);
@@ -306,7 +308,7 @@ int main()
         case 3:
             // creditos do desenvolvedor do prejeto
             system("cls");
-            printf("Desenvolvido por Daniel Oliveira\nAluno da Unipe - Ciencia da Computacao\n2021\n\n");
+            printf("Desenvolvido por Daniel Oliveira\nAluno da Unipê - Ciência da Computação\n2021\n\n");
             system("pause");
             break;
         case 4:
@@ -314,7 +316,7 @@ int main()
             printf("FIM DE JOGO");
             break;
         default:
-            printf("Opcao invalida");
+            printf("Opção inválida");
             break;
         }
     }
