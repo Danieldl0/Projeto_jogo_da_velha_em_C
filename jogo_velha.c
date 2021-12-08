@@ -178,13 +178,11 @@ int main()
     char jogadores[6][10];
     int pontuacao;
     char jogador[10];
-    char continuar;
 
     while (opcao != 4)
     {
         system("cls");
         tamanho = 0;
-        continuar = 's';
         vida = 2;
         j.pontos = 0;
         nivel = 0;
